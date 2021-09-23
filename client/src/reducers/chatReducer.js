@@ -39,6 +39,7 @@ export default function msgReducer(state = defaultState, action) {
                 ...state,
                 socket: action.payload
             }
+
         default:
             return state
     }
