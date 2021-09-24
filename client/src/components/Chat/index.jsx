@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchSocket } from '../../asyncActions'
+import { initializeSocket } from '../../asyncActions'
 
 import InputMessage from '../InputMessage'
 import MessagesList from '../MessagesList'
@@ -9,25 +9,25 @@ import './style.scss'
 
 const Chat = () => {
     const dispatch = useDispatch()
-    const socket = useSelector((state) => state.chatData.socket)
+    const isReconnect = useSelector((state) => state.socket.isReconnect)
+    let timeout = null
 
     useEffect(() => {
-        dispatch(fetchSocket())
+        dispatch(initializeSocket())
+
+        return () => {
+            clearInterval(timeout)
+        }
     }, [])
 
-    //
-    useEffect(() => {
-        if (socket !== null) {
-            socket.onclose = () => {
-                setTimeout(() => {
-                    dispatch(fetchSocket())
-                    console.log('Try reconnect')
-                }, 1000)
-                console.log('Socket closed')
-            }
-        }
-    }, [socket])
-    //
+    if (isReconnect) {
+        timeout = setInterval(() => {
+            dispatch(initializeSocket())
+            console.log('Try reconect')
+        }, 5000)
+    } else {
+        clearInterval(timeout)
+    }
 
     return (
         <section className="chat">

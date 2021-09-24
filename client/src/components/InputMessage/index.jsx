@@ -12,7 +12,7 @@ const InputMessage = () => {
     const dispatch = useDispatch()
     const msg = useSelector((state) => state.chatData.message)
     const username = useSelector((state) => state.chatData.username)
-    const socket = useSelector((state) => state.chatData.socket)
+    const socket = useSelector((state) => state.socket.socket)
     const connected = useSelector((state) => state.chatData.connected)
 
     const sendMessage = () => {
